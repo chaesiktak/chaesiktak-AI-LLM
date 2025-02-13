@@ -5,9 +5,15 @@ from openai import OpenAI
 from flask_cors import CORS  # 모든 도메인 허용
 
 
+def load_api_key():
+    with open("open_ai_key.txt", "r", encoding="utf-8") as file:
+        return file.read().strip()
+
+API_KEY = load_api_key()
+client = OpenAI(api_key = API_KEY)
+
 app = Flask(__name__)
 CORS(app)
-client = OpenAI(api_key='')
 
 def load_substitutes():
     file_path = "vegetarian_substitutes_translated.xlsx"

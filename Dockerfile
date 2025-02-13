@@ -7,6 +7,7 @@ COPY chaesiktak_llm.py chaesiktak_llm.py
 COPY templates/ templates/
 COPY vegetarian_substitutes_translated.xlsx vegetarian_substitutes_translated.xlsx
 COPY chaesiktak_prompt.txt chaesiktak_prompt.txt
+COPY open_ai_key.txt open_ai_key.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
