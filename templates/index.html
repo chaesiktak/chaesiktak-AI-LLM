@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM operator</title>
+</head>
+<body>
+    <h1>chaesiktak LLM operator</h1>
+    <label for="counts">⚠️Enter counts ⚠️JSON⚠️ format⚠️:</label>
+    <textarea id="counts" rows="5" cols="50" placeholder='{
+        "counts": {
+            "beef": 8,
+            "pork": 95,
+            "salmon": 10,
+            "lettuce": 20,
+            "almond": 3
+        }
+    }'></textarea>
+    <br>
+    <button onclick="fetchResponse()">Response</button>
+    <pre id="response"></pre>
+    
+    <script>
+        function fetchResponse() {
+            let countsInput = document.getElementById('counts').value.trim();
+            let jsonData;
+            try {
+                jsonData = JSON.parse(countsInput);
+                if (!jsonData.hasOwnProperty("counts") || typeof jsonData.counts !== "object") {
+                    throw new Error("Invalid JSON format: 'counts' object is required.");
+                }
+
+                for (let key in jsonData.counts) {
+                    if (typeof jsonData.counts[key] !== "number") {
+                        throw new Error(`Invalid value for '${key}': must be a number.`);
+                    }
+                }
+            } catch (error) {
+                document.getElementById('response').innerText = "❌ " + error.message;
+                return;
+            }
+
+            fetch('/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                let filteredOutput = {};
+                for (const [key, value] of Object.entries(data.output_dict)) {
+                    if (value !== "No substitute found") {
+                        filteredOutput[key] = value;
+                    }
+                }
+                document.getElementById('response').innerText = JSON.stringify({ response: data.response, output_dict: filteredOutput }, null, 2);
+            })
+            .catch(error => document.getElementById('response').innerText = "Error: " + error.message);
+        }
+    </script>
+</body>
+</html>
