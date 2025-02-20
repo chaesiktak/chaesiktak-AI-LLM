@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta writer="rkdekdud">
+    <meta name="채식탁" content="width=device-width, initial-scale=1.0">
+    <title>채식 대체 추천</title>
+</head>
+<body>
+    <h1>채식 대체 식재료 추천</h1>
+    <form id="jsonForm">
+        <textarea id="jsonInput" rows="10" cols="50"></textarea>
+        <br>
+        <button type="button" onclick="convert()">대체 추천 받기</button>
+        <button type="button" onclick="recommend()">추가 추천</button>
+    </form>
+    
+    <h2>결과</h2>
+    <pre id="result"></pre>
+
+    <script>
+        function convert() {
+            const inputJson = document.getElementById("jsonInput").value;
+            fetch('/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: inputJson
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById("result").textContent = JSON.stringify(data, null, 2))
+            .catch(error => console.error('Error:', error));
+        }
+
+        function recommend() {
+            const inputJson = document.getElementById("jsonInput").value;
+            fetch('/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: inputJson
+            })
+            .then(response => response.json())
+            .then(data => document.getElementById("result").textContent = JSON.stringify(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

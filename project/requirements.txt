@@ -1,0 +1,6 @@
+flask
+pandas
+openai
+gunicorn
+werkzeug==2.0.3
+openpyxl
